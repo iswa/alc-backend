@@ -18,6 +18,10 @@ userMaster = new Schema({
         type: Number,
         required: true
     },
+    type: {
+      type: String,
+      required: true
+    },
     date: {
         type: Date,
         default: Date.now

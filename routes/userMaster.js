@@ -10,6 +10,14 @@ router.get('/',(req,res)=>{
     })
 })
 
+router.get('/aggregate',(req,res)=>{
+    userMaster.aggregate([
+        { $lookup: { from: 'fun_fridays', localField: 'userName', foreignField : 'funWinner', as: 'Details'} },
+        { $lookup: { from: 'fun_fridays', localField: 'userName', foreignField : 'funWinner', as: 'Demo'} }],(err,data)=>{
+        res.json(data)
+    })
+})
+
 router.get('/:id',(req,res)=>{
     userMaster.findById(req.params.id,(err,data)=>{
         res.json(data)
@@ -30,7 +38,8 @@ router.post('/',(req,res)=>{
                 userName : req.body.userName,
                 email : req.body.email,
                 contactNo : req.body.contactNo,
-                password : req.body.password
+                password : req.body.password,
+                type : req.body.type
             });
             // Hash password before saving in database
             bcrypt.genSalt(10, (err, salt) => {
@@ -52,18 +61,21 @@ router.put('/:id',async (req,res)=>{
     res.json({message: 'Updated'})
 })
 
-router.post("/login", (req, res) => {
+router.post("/login", async(req, res) => {
+    // console.log (req.body);
     const email = req.body.email;
     const password = req.body.password;
     userMaster.findOne({ email }).then(user => {
         if (!user) {
-            return res.status(404).json({ emailnotfound: "Email not found" });
+            return res.status(404).json({ message: "Email not found" });
         }
         bcrypt.compare(password, user.password).then(isMatch => {
         if (isMatch) {
             const payload = {
                 id: user.id,
-                name: user.name
+                userName: user.userName,
+                email: req.body.email,
+                type: user.type
             };
             jwt.sign(
                 payload,
@@ -71,17 +83,17 @@ router.post("/login", (req, res) => {
                 {
                     expiresIn: 31556926 // 1 year in seconds
                 },
-                (err, token) => {
+                (err, gentoken) => {
                     res.json({
                         success: true,
-                        token: "Bearer " + token
-                    });
+                        token: "Bearer " + gentoken
+                    })
                 }
             );
-        } else {
+        } if (!isMatch) {
             return res
                 .status(400)
-                .json({ passwordincorrect: "Password incorrect" });
+                .json({ message: "Incorrect Password" });
         }
       });
     });
