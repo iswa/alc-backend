@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://event_alc:tirupati@event-alc.qetgv.mongodb.net/event-alc?retryWrites=true&w=majority',{useNewUrlParser : true, useUnifiedTopology : true, serverSelectionTimeoutMS: 5000})
-// mongoose.connect('mongodb://localhost:27017/event-alc',{useNewUrlParser : true, useUnifiedTopology : true, serverSelectionTimeoutMS: 5000})
+// mongoose.connect('mongodb+srv://event_alc:tirupati@event-alc.qetgv.mongodb.net/event-alc?retryWrites=true&w=majority',{useNewUrlParser : true, useUnifiedTopology : true, serverSelectionTimeoutMS: 5000})
+mongoose.connect('mongodb://localhost:27017/event-alc',{useNewUrlParser : true, useUnifiedTopology : true, serverSelectionTimeoutMS: 5000})
 const cors = require('cors')
 const app = express()
 
