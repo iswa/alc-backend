@@ -18,7 +18,7 @@ app.use("/api/user",require('./routes/userMaster'))
 app.use("/api/posts",require('./routes/login'))
 // app.use("/profile",require('./routes/profile'))
 
-const port = process.env.PORT || 80
+const port = 3000
 app.get('/',(req,res)=>{
     res.send(`Server up and running on port ${port}`)
 })
